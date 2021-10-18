@@ -95,6 +95,7 @@ fun! tmuxline#util#create_line_from_hash(hash) abort
   let bar.options = get(hash, 'options', {})
   let bar.win_options = get(hash, 'win_options', {})
   let is_win_list_right = get(bar.options, 'status-justify', '') ==# 'right'
+  let win_sep_type_left = 'right'
   let win_sep_type = is_win_list_right ? 'right' : 'left'
 
   for key in filter(['a','b','c', 'x', 'y', 'z', 'win', 'cwin'], 'has_key(hash, v:val)')
@@ -118,14 +119,14 @@ fun! tmuxline#util#create_line_from_hash(hash) abort
 
   for key in filter(['win'], 'has_key(hash, v:val)')
     let parts_code = map(copy(hash[key]), '"call bar.win.add(\"" . s:DEFAULT_COLOR . "\", \"" . v:val . "\")"')
-    exec 'call bar.win.add_' . win_sep_type . '_sep() | call bar.win.add(key, "")'
+    exec 'call bar.win.add_' . win_sep_type_left . '_sep() | call bar.win.add(key, "")'
     exec join(parts_code, '| call bar.win.add_' . win_sep_type . '_alt_sep() |')
     exec 'call bar.win.add(key, "") | call bar.win.add_' . win_sep_type . '_sep()'
   endfor
 
   for key in filter(['cwin'], 'has_key(hash, v:val)')
     let parts_code = map(copy(hash[key]), '"call bar.cwin.add(\"" . key . "\", \"" . v:val . "\")"')
-    exec 'call bar.cwin.add_' . win_sep_type . '_sep()'
+    exec 'call bar.cwin.add_' . win_sep_type_left . '_sep()'
     exec join(parts_code, '| call bar.cwin.add_' . win_sep_type . '_alt_sep() |')
     exec 'call bar.cwin.add_' . win_sep_type . '_sep()'
   endfor
